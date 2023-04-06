@@ -7,6 +7,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CriminalDAO extends DAO {
+    private final String ID = "id";
+    private final String PERSON_ID = "person_id";
+
+    private final String NICKNAME = "nickname";
+    private final String BIOGRAPHY = "biography";
+
     @Override
     protected String getTable() {
         return "criminal";
@@ -14,38 +20,39 @@ public class CriminalDAO extends DAO {
 
     @Override
     public String[] getUpdateColumns() {
-        return new String[]{"person_id", "nickname", "biography"};
+        return new String[]{PERSON_ID, NICKNAME, BIOGRAPHY};
     }
 
     @Override
-    public String[] getUpdateTypes() {
-        return new String[]{"int", "string", "string"};
+    public DataType[] getUpdateTypes() {
+        return new DataType[]{DataType.INT, DataType.STRING, DataType.STRING};
     }
 
     @Override
     public String[] getFindColumns() {
-        return new String[]{"id"};
+        return new String[]{ID};
     }
 
     @Override
     protected Model creteObject(ResultSet rs) throws SQLException {
         return new Criminal(
-                rs.getInt("id"),
-                rs.getInt("person_id"),
-                rs.getString("nickname"),
-                rs.getString("biography")
+                rs.getInt(ID),
+                rs.getInt(PERSON_ID),
+                rs.getString(NICKNAME),
+                rs.getString(BIOGRAPHY)
         );
     }
 
     @Override
     protected Object getValue(Model model, String name) {
         Criminal criminal = (Criminal) model;
-        Object value = null;
+        Object value;
         switch (name) {
-            case "id" -> value = criminal.getId();
-            case "person_id" -> value = criminal.getPersonId();
-            case "nickname" -> value = criminal.getNickname();
-            case "biography" -> value = criminal.getBiography();
+            case ID -> value = criminal.getId();
+            case PERSON_ID -> value = criminal.getPersonId();
+            case NICKNAME -> value = criminal.getNickname();
+            case BIOGRAPHY -> value = criminal.getBiography();
+            default -> throw new IllegalArgumentException();
         }
         return value;
     }
@@ -56,10 +63,11 @@ public class CriminalDAO extends DAO {
         }
         Criminal criminal = (Criminal) model;
         switch (name) {
-            case "id" -> criminal.setId((int) value);
-            case "person_id" -> criminal.setPersonId((int) value);
-            case "nickname" -> criminal.setNickname((String) value);
-            case "biography" -> criminal.setBiography((String) value);
+            case ID -> criminal.setId((int) value);
+            case PERSON_ID -> criminal.setPersonId((int) value);
+            case NICKNAME -> criminal.setNickname((String) value);
+            case BIOGRAPHY -> criminal.setBiography((String) value);
+            default -> throw new IllegalArgumentException();
         }
         return model;
     }

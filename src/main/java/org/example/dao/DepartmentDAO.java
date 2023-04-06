@@ -7,6 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DepartmentDAO extends DAO {
+    private final String ID = "id";
+    private final String NAME = "name";
+    private final String ADDRESS = "address";
+
     @Override
     protected String getTable() {
         return "department";
@@ -14,36 +18,37 @@ public class DepartmentDAO extends DAO {
 
     @Override
     public String[] getUpdateColumns() {
-        return new String[]{"name", "address"};
+        return new String[]{NAME, ADDRESS};
     }
 
     @Override
-    public String[] getUpdateTypes() {
-        return new String[]{"string", "string"};
+    public DataType[] getUpdateTypes() {
+        return new DataType[]{DataType.STRING, DataType.STRING};
     }
 
     @Override
     public String[] getFindColumns() {
-        return new String[]{"id"};
+        return new String[]{ID};
     }
 
     @Override
     protected Model creteObject(ResultSet rs) throws SQLException {
         return new Department(
-                rs.getInt("id"),
-                rs.getString("name"),
-                rs.getString("address")
+                rs.getInt(ID),
+                rs.getString(NAME),
+                rs.getString(ADDRESS)
         );
     }
 
     @Override
     protected Object getValue(Model model, String name) {
         Department department = (Department) model;
-        Object value = null;
+        Object value;
         switch (name) {
-            case "id" -> value = department.getId();
-            case "name" -> value = department.getName();
-            case "address" -> value = department.getAddress();
+            case ID -> value = department.getId();
+            case NAME -> value = department.getName();
+            case ADDRESS -> value = department.getAddress();
+            default -> throw new IllegalArgumentException();
         }
         return value;
     }
@@ -54,9 +59,10 @@ public class DepartmentDAO extends DAO {
         }
         Department department = (Department) model;
         switch (name) {
-            case "id" -> department.setId((int) value);
-            case "name" -> department.setName((String) value);
-            case "address" -> department.setAddress((String) value);
+            case ID -> department.setId((int) value);
+            case NAME -> department.setName((String) value);
+            case ADDRESS -> department.setAddress((String) value);
+            default -> throw new IllegalArgumentException();
         }
         return model;
     }

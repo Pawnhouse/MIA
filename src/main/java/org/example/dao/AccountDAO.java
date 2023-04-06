@@ -5,7 +5,13 @@ import org.example.model.Account;
 
 import java.sql.*;
 
+
 public class AccountDAO extends DAO {
+    private final String ID = "id";
+    private final String PASSWORD = "password";
+    private final String EMAIL = "email";
+    private final String PERSON_ID = "person_id";
+    private final String ROLE = "role";
     @Override
     protected String getTable() {
         return "account";
@@ -13,40 +19,42 @@ public class AccountDAO extends DAO {
 
     @Override
     public String[] getUpdateColumns() {
-        return new String[]{"person_id", "email", "password", "role"};
+        return new String[]{PERSON_ID, EMAIL, PASSWORD, ROLE};
     }
 
     @Override
-    public String[] getUpdateTypes() {
-        return new String[]{"int", "string", "string", "string"};
+    public DataType[] getUpdateTypes() {
+        return new DataType[]{DataType.INT, DataType.STRING, DataType.STRING, DataType.STRING};
     }
 
     @Override
     public String[] getFindColumns() {
-        return new String[]{"id"};
+        return new String[]{ID};
     }
 
     @Override
     protected Model creteObject(ResultSet rs) throws SQLException {
         return new Account(
-                rs.getInt("id"),
-                rs.getInt("person_id"),
-                rs.getString("email"),
-                rs.getString("password"),
-                rs.getString("role")
+                rs.getInt(ID),
+                rs.getInt(PERSON_ID),
+                rs.getString(EMAIL),
+                rs.getString(PASSWORD),
+                rs.getString(ROLE)
         );
     }
 
     @Override
     protected Object getValue(Model model, String person_id) {
         Account account = (Account) model;
-        Object value = null;
+        Object value;
         switch (person_id) {
-            case "id" -> value = account.getId();
-            case "person_id" -> value = account.getPersonId();
-            case "email" -> value = account.getEmail();
-            case "password" -> value = account.getPassword();
-            case "role" -> value = account.getRole();
+            case ID -> value = account.getId();
+            case PERSON_ID -> value = account.getPersonId();
+            case EMAIL -> value = account.getEmail();
+            case PASSWORD -> value = account.getPassword();
+            case ROLE -> value = account.getRole();
+            default -> throw new IllegalArgumentException();
+
         }
         return value;
     }
@@ -57,11 +65,13 @@ public class AccountDAO extends DAO {
         }
         Account account = (Account) model;
         switch (person_id) {
-            case "id" -> account.setId((int) value);
-            case "person_id" -> account.setPersonId((int) value);
-            case "email" -> account.setEmail((String) value);
-            case "password" -> account.setPassword((String) value);
-            case "role" -> account.setRole((String) value);
+            case ID -> account.setId((int) value);
+            case PERSON_ID -> account.setPersonId((int) value);
+            case EMAIL -> account.setEmail((String) value);
+            case PASSWORD -> account.setPassword((String) value);
+            case ROLE -> account.setRole((String) value);
+            default -> throw new IllegalArgumentException();
+
         }
         return model;
     }

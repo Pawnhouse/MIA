@@ -7,6 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OfficerDAO extends DAO {
+    private final String ID = "id";
+    private final String PERSON_ID = "person_id";
+    private final String BOSS_ID = "boss_id";
+    private final String DEPARTMENT_ID = "department_id";
+
     @Override
     protected String getTable() {
         return "officer";
@@ -14,38 +19,39 @@ public class OfficerDAO extends DAO {
 
     @Override
     public String[] getUpdateColumns() {
-        return new String[]{"person_id", "boss_id", "department_id"};
+        return new String[]{PERSON_ID, BOSS_ID, DEPARTMENT_ID};
     }
 
     @Override
-    public String[] getUpdateTypes() {
-        return new String[]{"int", "int", "int"};
+    public DataType[] getUpdateTypes() {
+        return new DataType[]{DataType.INT, DataType.INT, DataType.INT};
     }
 
     @Override
     public String[] getFindColumns() {
-        return new String[]{"id"};
+        return new String[]{ID};
     }
 
     @Override
     protected Model creteObject(ResultSet rs) throws SQLException {
         return new Officer(
-                rs.getInt("id"),
-                rs.getInt("person_id"),
-                rs.getInt("boss_id"),
-                rs.getInt("department_id")
+                rs.getInt(ID),
+                rs.getInt(PERSON_ID),
+                rs.getInt(BOSS_ID),
+                rs.getInt(DEPARTMENT_ID)
         );
     }
 
     @Override
     protected Object getValue(Model model, String name) {
         Officer officer = (Officer) model;
-        Object value = null;
+        Object value;
         switch (name) {
-            case "id" -> value = officer.getId();
-            case "person_id" -> value = officer.getPersonId();
-            case "boss_id" -> value = officer.getBossId();
-            case "department_id" -> value = officer.getDepartmentId();
+            case ID -> value = officer.getId();
+            case PERSON_ID -> value = officer.getPersonId();
+            case BOSS_ID -> value = officer.getBossId();
+            case DEPARTMENT_ID -> value = officer.getDepartmentId();
+            default -> throw new IllegalArgumentException();
         }
         return value;
     }
@@ -56,10 +62,11 @@ public class OfficerDAO extends DAO {
         }
         Officer officer = (Officer) model;
         switch (name) {
-            case "id" -> officer.setId((int) value);
-            case "person_id" -> officer.setPersonId((int) value);
-            case "boss_id" -> officer.setBossId((Integer) value);
-            case "department_id" -> officer.setDepartmentId((int) value);
+            case ID -> officer.setId((int) value);
+            case PERSON_ID -> officer.setPersonId((int) value);
+            case BOSS_ID -> officer.setBossId((Integer) value);
+            case DEPARTMENT_ID -> officer.setDepartmentId((int) value);
+            default -> throw new IllegalArgumentException();
         }
         return model;
     }

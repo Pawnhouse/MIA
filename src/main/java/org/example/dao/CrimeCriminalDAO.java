@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CrimeCriminalDAO extends DAO {
+    private final String CRIME_ID = "crime_id";
+    private final String CRIMINAL_ID = "criminal_id";
     @Override
     protected String getTable() {
         return "crime_criminal";
@@ -14,34 +16,35 @@ public class CrimeCriminalDAO extends DAO {
 
     @Override
     public String[] getUpdateColumns() {
-        return new String[]{"crime_id", "criminal_id"};
+        return new String[]{CRIME_ID, CRIMINAL_ID};
     }
 
     @Override
-    public String[] getUpdateTypes() {
-        return new String[]{"int", "int"};
+    public DataType[] getUpdateTypes() {
+        return new DataType[]{DataType.INT, DataType.INT};
     }
 
     @Override
     public String[] getFindColumns() {
-        return new String[]{"crime_id", "criminal_id"};
+        return new String[]{CRIME_ID, CRIMINAL_ID};
     }
 
     @Override
     protected Model creteObject(ResultSet rs) throws SQLException {
         return new CrimeCriminal(
-                rs.getInt("crime_id"),
-                rs.getInt("criminal_id")
+                rs.getInt(CRIME_ID),
+                rs.getInt(CRIMINAL_ID)
         );
     }
 
     @Override
     protected Object getValue(Model model, String name) {
         CrimeCriminal crimeCriminal = (CrimeCriminal) model;
-        Object value = null;
+        Object value;
         switch (name) {
-            case "crime_id" -> value = crimeCriminal.getCrimeId();
-            case "criminal_id" -> value = crimeCriminal.getCriminalId();
+            case CRIME_ID -> value = crimeCriminal.getCrimeId();
+            case CRIMINAL_ID -> value = crimeCriminal.getCriminalId();
+            default -> throw new IllegalArgumentException();
         }
         return value;
     }
@@ -52,8 +55,9 @@ public class CrimeCriminalDAO extends DAO {
         }
         CrimeCriminal crimeCriminal = (CrimeCriminal) model;
         switch (name) {
-            case "crime_id" -> crimeCriminal.setCrimeId((int) value);
-            case "criminal_id" -> crimeCriminal.setCriminalId((int) value);
+            case CRIME_ID -> crimeCriminal.setCrimeId((int) value);
+            case CRIMINAL_ID -> crimeCriminal.setCriminalId((int) value);
+            default -> throw new IllegalArgumentException();
         }
         return model;
     }

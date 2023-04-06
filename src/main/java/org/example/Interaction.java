@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.dao.DAO;
+import org.example.dao.DataType;
 import org.example.model.Model;
 
 import java.sql.Date;
@@ -45,30 +46,30 @@ public class Interaction {
         }
     }
 
-    private static Model setValue(DAO dao, String type, String name, Model model) {
+    private static Model setValue(DAO dao, DataType type, String name, Model model) {
         System.out.printf("%s: ", name);
         Object value = null;
-        if (type.equals("int")) {
-            value = in.nextInt();
-            in.nextLine();
-        }
-        if (type.equals("string")) {
-            value = in.nextLine();
-        }
-        if (type.equals("date")) {
-            String s = in.nextLine();
-            value = Date.valueOf(s);
-        }
-        if (type.equals("timestamp")) {
-            String s = in.nextLine();
-            value = Timestamp.valueOf(s);
+        switch (type){
+            case INT -> {
+                value = in.nextInt();
+                in.nextLine();
+            }
+            case STRING -> value = in.nextLine();
+            case DATE -> {
+                String s = in.nextLine();
+                value = Date.valueOf(s);
+            }
+            case TIMESTAMP -> {
+                String s = in.nextLine();
+                value = Timestamp.valueOf(s);
+            }
         }
         return dao.setValue(model, name, value);
     }
 
     public static Model getNewModel(DAO dao, int type) {
         String[] columns = dao.getUpdateColumns();
-        String[] types = dao.getUpdateTypes();
+        DataType[] types = dao.getUpdateTypes();
         Model model = null;
         System.out.println(askNewStr[type]);
         for (int i = 0; i < columns.length; i++) {
@@ -82,18 +83,19 @@ public class Interaction {
         Model model = null;
         System.out.print(askFindStr[type]);
         for (String idColumn : idColumns) {
-            model = setValue(dao, "int", idColumn, model);
+            model = setValue(dao, DataType.INT, idColumn, model);
         }
         return model;
     }
 
     public static void modify(DAO dao, int type) {
         try {
-            int affectedRows = -1;
+            int affectedRows;
             switch (type) {
                 case 0 -> affectedRows = dao.create(getNewModel(dao, type));
                 case 1 -> affectedRows = dao.update(getNewModel(dao, type), getOldModel(dao, type));
                 case 2 -> affectedRows = dao.delete(getOldModel(dao, type));
+                default -> throw new IllegalArgumentException();
             }
             if (affectedRows <= 0) {
                 System.out.println("Nothing has changed");

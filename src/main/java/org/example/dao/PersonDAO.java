@@ -8,6 +8,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PersonDAO extends DAO {
+    private final String ID = "id";
+    private final String NAME = "name";
+    private final String SURNAME = "surname";
+    private final String MIDDLE_NAME = "middle_name";
+    private final String BIRTHDAY = "birthday";
+
     @Override
     protected String getTable() {
         return "person";
@@ -15,40 +21,41 @@ public class PersonDAO extends DAO {
 
     @Override
     public String[] getUpdateColumns() {
-        return new String[]{"name", "surname", "middle_name", "birthday"};
+        return new String[]{NAME, SURNAME, MIDDLE_NAME, BIRTHDAY};
     }
 
     @Override
-    public String[] getUpdateTypes() {
-        return new String[]{"string", "string", "string", "date"};
+    public DataType[] getUpdateTypes() {
+        return new DataType[]{DataType.STRING, DataType.STRING, DataType.STRING, DataType.DATE};
     }
 
     @Override
     public String[] getFindColumns() {
-        return new String[]{"id"};
+        return new String[]{ID};
     }
 
     @Override
     protected Model creteObject(ResultSet rs) throws SQLException {
         return new Person(
-                rs.getInt("id"),
-                rs.getString("name"),
-                rs.getString("surname"),
-                rs.getString("middle_name"),
-                rs.getDate("birthday")
+                rs.getInt(ID),
+                rs.getString(NAME),
+                rs.getString(SURNAME),
+                rs.getString(MIDDLE_NAME),
+                rs.getDate(BIRTHDAY)
         );
     }
 
     @Override
     protected Object getValue(Model model, String name) {
         Person person = (Person) model;
-        Object value = null;
+        Object value;
         switch (name) {
-            case "id" -> value = person.getId();
-            case "name" -> value = person.getName();
-            case "surname" -> value = person.getSurname();
-            case "middle_name" -> value = person.getMiddleName();
-            case "birthday" -> value = person.getBirthDay();
+            case ID -> value = person.getId();
+            case NAME -> value = person.getName();
+            case SURNAME -> value = person.getSurname();
+            case MIDDLE_NAME -> value = person.getMiddleName();
+            case BIRTHDAY -> value = person.getBirthDay();
+            default -> throw new IllegalArgumentException();
         }
         return value;
     }
@@ -59,11 +66,12 @@ public class PersonDAO extends DAO {
         }
         Person person = (Person) model;
         switch (name) {
-            case "id" -> person.setId((int) value);
-            case "name" -> person.setName((String) value);
-            case "surname" -> person.setSurname((String) value);
-            case "middle_name" -> person.setMiddleName((String) value);
-            case "birthday" -> person.setBirthDay((Date) value);
+            case ID -> person.setId((int) value);
+            case NAME -> person.setName((String) value);
+            case SURNAME -> person.setSurname((String) value);
+            case MIDDLE_NAME -> person.setMiddleName((String) value);
+            case BIRTHDAY -> person.setBirthDay((Date) value);
+            default -> throw new IllegalArgumentException();
         }
         return model;
     }

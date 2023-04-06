@@ -61,7 +61,7 @@ public class Main {
     }
 
     private static void runQuery(String command) {
-        DAO dao = null;
+        DAO dao;
         String[] args = command.split(" ");
         if (args.length == 1) {
             return;
@@ -76,10 +76,10 @@ public class Main {
             case "crime" -> dao = new CrimeDAO();
             case "account" -> dao = new AccountDAO();
             case "complaint" -> dao = new ComplaintDAO();
-        }
-        if (dao == null) {
-            System.out.println("Wrong table");
-            return;
+            default ->{
+                System.out.println("Wrong table");
+                return;
+            }
         }
         if (args.length == 3 && args[0].equals("r") && args[2].equals("--one")) {
             Interaction.readOne(dao);
@@ -93,6 +93,7 @@ public class Main {
             case "r" -> Interaction.read(dao);
             case "u" -> Interaction.modify(dao, 1);
             case "d" -> Interaction.modify(dao, 2);
+            default -> { } // other options
         }
     }
 

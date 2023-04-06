@@ -8,6 +8,11 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 public class ComplaintDAO extends DAO {
+    private final String ID = "id";
+    private final String SENDER_ID = "sender_id";
+    private final String DESCRIPTION = "description";
+    private final String SENT = "sent";
+
     @Override
     protected String getTable() {
         return "complaint";
@@ -15,38 +20,39 @@ public class ComplaintDAO extends DAO {
 
     @Override
     public String[] getUpdateColumns() {
-        return new String[]{"sender_id", "description", "sent"};
+        return new String[]{SENDER_ID, DESCRIPTION, SENT};
     }
 
     @Override
-    public String[] getUpdateTypes() {
-        return new String[]{"int", "string", "timestamp"};
+    public DataType[] getUpdateTypes() {
+        return new DataType[]{DataType.INT, DataType.STRING, DataType.TIMESTAMP};
     }
 
     @Override
     public String[] getFindColumns() {
-        return new String[]{"id"};
+        return new String[]{ID};
     }
 
     @Override
     protected Model creteObject(ResultSet rs) throws SQLException {
         return new Complaint(
-                rs.getInt("id"),
-                rs.getInt("sender_id"),
-                rs.getString("description"),
-                rs.getTimestamp("sent")
+                rs.getInt(ID),
+                rs.getInt(SENDER_ID),
+                rs.getString(DESCRIPTION),
+                rs.getTimestamp(SENT)
         );
     }
 
     @Override
     protected Object getValue(Model model, String account_id) {
         Complaint complaint = (Complaint) model;
-        Object value = null;
+        Object value;
         switch (account_id) {
-            case "id" -> value = complaint.getId();
-            case "sender_id" -> value = complaint.getSenderId();
-            case "description" -> value = complaint.getDescription();
-            case "sent" -> value = complaint.getSent();
+            case ID -> value = complaint.getId();
+            case SENDER_ID -> value = complaint.getSenderId();
+            case DESCRIPTION -> value = complaint.getDescription();
+            case SENT -> value = complaint.getSent();
+            default -> throw new IllegalArgumentException();
         }
         return value;
     }
@@ -57,10 +63,11 @@ public class ComplaintDAO extends DAO {
         }
         Complaint complaint = (Complaint) model;
         switch (account_id) {
-            case "id" -> complaint.setId((int) value);
-            case "sender_id" -> complaint.setSenderId((int) value);
-            case "description" -> complaint.setDescription((String) value);
-            case "sent" -> complaint.setSent((Timestamp) value);
+            case ID -> complaint.setId((int) value);
+            case SENDER_ID -> complaint.setSenderId((int) value);
+            case DESCRIPTION -> complaint.setDescription((String) value);
+            case SENT -> complaint.setSent((Timestamp) value);
+            default -> throw new IllegalArgumentException();
         }
         return model;
     }

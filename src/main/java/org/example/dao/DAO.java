@@ -11,7 +11,7 @@ public abstract class DAO {
 
     abstract protected String getTable();
 
-    public abstract String[] getUpdateTypes();
+    public abstract DataType[] getUpdateTypes();
 
     abstract public String[] getUpdateColumns();
 
@@ -52,7 +52,7 @@ public abstract class DAO {
         try (Connection connection = this.connect();
              PreparedStatement stmt = connection.prepareStatement(query)) {
             for (int i = 0; i < idColumns.length; i++) {
-                setStatementValue(stmt, i + 1, "int", model, idColumns[i]);
+                setStatementValue(stmt, i + 1, DataType.INT, model, idColumns[i]);
             }
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -62,13 +62,13 @@ public abstract class DAO {
         }
     }
 
-    private void setStatementValue(PreparedStatement statement, int parameterIndex, String type, Model model, String name) throws SQLException {
+    private void setStatementValue(PreparedStatement statement, int parameterIndex, DataType type, Model model, String name) throws SQLException {
         Object value = getValue(model, name);
         switch (type) {
-            case "int" -> statement.setInt(parameterIndex, (int) value);
-            case "string" -> statement.setString(parameterIndex, (String) value);
-            case "date" -> statement.setDate(parameterIndex, (Date) value);
-            case "timestamp" -> statement.setTimestamp(parameterIndex, (Timestamp) value);
+            case INT -> statement.setInt(parameterIndex, (int) value);
+            case STRING -> statement.setString(parameterIndex, (String) value);
+            case DATE -> statement.setDate(parameterIndex, (Date) value);
+            case TIMESTAMP -> statement.setTimestamp(parameterIndex, (Timestamp) value);
         }
     }
 
@@ -87,7 +87,7 @@ public abstract class DAO {
     private void fillStatement(PreparedStatement statement, Model newModel, Model oldModel) throws SQLException {
         String[] idColumns = this.getFindColumns();
         String[] columns = this.getUpdateColumns();
-        String[] types = this.getUpdateTypes();
+        DataType[] types = this.getUpdateTypes();
         if (newModel == null) {
             columns = new String[0];
         }
@@ -96,7 +96,7 @@ public abstract class DAO {
         }
 
         for (int i = 0; i < idColumns.length; i++) {
-            setStatementValue(statement, i + 1 + columns.length, "int", oldModel, idColumns[i]);
+            setStatementValue(statement, i + 1 + columns.length, DataType.INT, oldModel, idColumns[i]);
         }
         for (int i = 0; i < columns.length; i++) {
             setStatementValue(statement, i + 1, types[i], newModel, columns[i]);
@@ -121,7 +121,6 @@ public abstract class DAO {
             }
             return -1;
         } catch (Exception e) {
-            //e.printStackTrace();
             if (e.getMessage() != null) {
                 System.out.println("Error has happened");
             }

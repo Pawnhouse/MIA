@@ -6,6 +6,10 @@ import org.example.model.Type;
 import java.sql.*;
 
 public class TypeDAO extends DAO {
+    private final String ID = "id";
+    private final String NAME = "name";
+    private final String DESCRIPTION = "description";
+
     @Override
     protected String getTable() {
         return "type";
@@ -13,36 +17,37 @@ public class TypeDAO extends DAO {
 
     @Override
     public String[] getUpdateColumns() {
-        return new String[]{"name", "description"};
+        return new String[]{NAME, DESCRIPTION};
     }
 
     @Override
-    public String[] getUpdateTypes() {
-        return new String[]{"string", "string"};
+    public DataType[] getUpdateTypes() {
+        return new DataType[]{DataType.STRING, DataType.STRING};
     }
 
     @Override
     public String[] getFindColumns() {
-        return new String[]{"id"};
+        return new String[]{ID};
     }
 
     @Override
     protected Model creteObject(ResultSet rs) throws SQLException {
         return new Type(
-                rs.getInt("id"),
-                rs.getString("name"),
-                rs.getString("description")
+                rs.getInt(ID),
+                rs.getString(NAME),
+                rs.getString(DESCRIPTION)
         );
     }
 
     @Override
     protected Object getValue(Model model, String name) {
         Type type = (Type) model;
-        Object value = null;
+        Object value;
         switch (name) {
-            case "id" -> value = type.getId();
-            case "name" -> value = type.getName();
-            case "description" -> value = type.getDescription();
+            case ID -> value = type.getId();
+            case NAME -> value = type.getName();
+            case DESCRIPTION -> value = type.getDescription();
+            default -> throw new IllegalArgumentException();
         }
         return value;
     }
@@ -53,9 +58,11 @@ public class TypeDAO extends DAO {
         }
         Type type = (Type) model;
         switch (name) {
-            case "id" -> type.setId((int) value);
-            case "name" -> type.setName((String) value);
-            case "description" -> type.setDescription((String) value);
+            case ID -> type.setId((int) value);
+            case NAME -> type.setName((String) value);
+            case DESCRIPTION -> type.setDescription((String) value);
+            default -> throw new IllegalArgumentException();
+
         }
         return model;
     }
