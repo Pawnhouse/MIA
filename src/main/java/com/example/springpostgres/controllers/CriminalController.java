@@ -2,8 +2,10 @@ package com.example.springpostgres.controllers;
 
 import com.example.springpostgres.models.Crime;
 import com.example.springpostgres.models.Criminal;
+import com.example.springpostgres.models.Person;
 import com.example.springpostgres.repositories.CrimeRepository;
 import com.example.springpostgres.repositories.CriminalRepository;
+import com.example.springpostgres.utils.PersonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("api/criminal")
 public class CriminalController {
@@ -30,8 +33,20 @@ public class CriminalController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Criminal criminal) {
-        criminalRepository.save(criminal);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        criminal = criminalRepository.save(criminal);
+        return new ResponseEntity<>(criminal.getId(), HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<?> update(@RequestBody Criminal criminal) {
+        Criminal old = criminalRepository.findById(criminal.getId()).orElseThrow();
+        old.setBiography(criminal.getBiography());
+        old.setNickname(criminal.getNickname());
+        Person oldPerson = old.getPerson();
+        Person newPerson = criminal.getPerson();
+        PersonUtil.updatePerson(oldPerson, newPerson);
+        criminalRepository.save(old);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("add-to-crime")

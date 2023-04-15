@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import com.example.springpostgres.models.Account;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,10 +43,13 @@ public class JwtTokenUtil implements Serializable {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
-
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(Account account) {
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername());
+        claims.put("email", account.getEmail());
+        claims.put("person", account.getPerson());
+        claims.put("id", account.getId());
+        claims.put("role", account.getRole());
+        return doGenerateToken(claims, account.getEmail());
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {

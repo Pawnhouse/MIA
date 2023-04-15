@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("api/complaint")
 public class ComplaintController {
@@ -22,7 +23,6 @@ public class ComplaintController {
         this.complaintRepository = complaintRepository;
         this.accountRepository = accountRepository;
     }
-
 
     @GetMapping
     public Iterable<Complaint> getAllComplaints() {
@@ -43,5 +43,4 @@ public class ComplaintController {
         complaintRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

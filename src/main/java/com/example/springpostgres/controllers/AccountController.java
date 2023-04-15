@@ -5,6 +5,7 @@ import com.example.springpostgres.models.Person;
 import com.example.springpostgres.repositories.AccountRepository;
 import com.example.springpostgres.utils.MyUserDetailsService;
 import com.example.springpostgres.utils.JwtTokenUtil;
+import com.example.springpostgres.utils.PersonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
+@CrossOrigin
 @RestController
 @RequestMapping("api/account")
 public class AccountController {
@@ -42,12 +44,15 @@ public class AccountController {
         this.passwordEncoder = passwordEncoder;
     }
 
+
     @PostMapping("sign-in")
     public ResponseEntity<?> authenticate(@RequestBody Account account) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(account.getEmail(), account.getPassword())
         );
-        String token = jwtTokenUtil.generateToken(myUserDetailsService.loadUserByUsername(account.getEmail()));
+        Account user = accountRepository.findAccountByEmail(account.getEmail());
+        String token = jwtTokenUtil.generateToken(user);
+        System.out.println(token);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
@@ -63,7 +68,8 @@ public class AccountController {
         } catch (Exception e) {
             return new ResponseEntity<>("Server error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        String token = jwtTokenUtil.generateToken(myUserDetailsService.loadUserByUsername(account.getEmail()));
+        Account user = accountRepository.findAccountByEmail(account.getEmail());
+        String token = jwtTokenUtil.generateToken(user);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
@@ -83,15 +89,12 @@ public class AccountController {
         }
         Person oldPerson = old.getPerson();
         Person newPerson = account.getPerson();
-        if (account.getPerson() != null) {
-            oldPerson.setBirthday(newPerson.getBirthday());
-            oldPerson.setName(newPerson.getName());
-            oldPerson.setSurname(newPerson.getSurname());
-            oldPerson.setMiddleName(newPerson.getMiddleName());
-        }
+        PersonUtil.updatePerson(oldPerson, newPerson);
         old.setRole(account.getRole());
+
         accountRepository.save(old);
-        String token = jwtTokenUtil.generateToken(myUserDetailsService.loadUserByUsername(old.getEmail()));
+        Account user = accountRepository.findAccountByEmail(old.getEmail());
+        String token = jwtTokenUtil.generateToken(user);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 

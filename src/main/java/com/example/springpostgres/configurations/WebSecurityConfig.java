@@ -50,6 +50,7 @@ public class WebSecurityConfig {
         http.csrf().disable()
                 .authorizeHttpRequests((authorize) ->
                         authorize.requestMatchers("/api/account/sign-in", "/api/account/sign-up").permitAll()
+                                .requestMatchers(HttpMethod.OPTIONS).permitAll()
                                 .requestMatchers(HttpMethod.PUT, "api/account").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/api/complaint").hasAuthority("ROLE_USER")
                                 .anyRequest().hasAuthority("ROLE_OFFICER")
