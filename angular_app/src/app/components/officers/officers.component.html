@@ -1,0 +1,11 @@
+<div class="container">
+  <h3 class="m-3">
+    Officer List
+  </h3>
+
+  <ul>
+    <li *ngFor="let officer of officers">
+      <p><a [routerLink]="['/officer', officer.id]">{{officer?.person?.name + ' ' + officer?.person?.surname}}</a></p>
+    </li>
+  </ul>
+</div>

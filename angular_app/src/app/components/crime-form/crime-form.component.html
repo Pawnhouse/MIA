@@ -1,0 +1,43 @@
+<div class="card my-5">
+  <div class="card-body">
+    <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          [(ngModel)]="crime.description"
+          class="form-control"
+          id="description"
+          name="description"
+          placeholder="Description"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label class="mr-1" for="type">Type: </label>
+        <select
+          class="form-select"
+          [(ngModel)]="crime.type"
+          id="type"
+          name="type"
+        >
+          <option [value]="type.id" *ngFor="let type of types">{{type.name}}</option>
+
+        </select>
+      </div>
+      <div *ngFor="let criminal of criminalList">
+
+        <input type="checkbox" [(ngModel)]="criminal.checked"
+               class=""
+               [name]="criminal.id"
+               (change)="onChange(criminal)"
+        ><label class="ml-1" [for]="criminal.id">{{criminal?.person?.name + ' ' + criminal.person.surname}}
+      </label>
+      </div>
+
+
+      <button type="submit" [disabled]="!userForm.form.valid"
+              class="btn btn-info">Submit
+      </button>
+      <div [hidden]="!isError" class="alert alert-danger">Error</div>
+    </form>
+  </div>
+</div>

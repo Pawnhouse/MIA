@@ -1,0 +1,11 @@
+<div class="container">
+  <h3 class="m-3">
+    Complaints
+  </h3>
+  <div *ngFor="let complaint of complaints" class="p-3">
+    <p><b>{{complaint.sender.person.name + ' ' + complaint.sender.person.surname}}</b></p>
+    <p>{{complaint.description}}</p>
+    <button class="btn btn-danger" (click)="onDelete(complaint.id)">Delete</button>
+  </div>
+</div>
+

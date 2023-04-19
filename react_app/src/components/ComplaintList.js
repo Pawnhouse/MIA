@@ -28,7 +28,7 @@ export default function ComplaintList() {
         <>
             <Container className='col-md'>
 
-                <h3>Complaints List</h3>
+                <h3>Complaints</h3>
                 {
                     complaints.map((complaint, index) => {
                         return <ComplaintItem

@@ -1,0 +1,20 @@
+<div class="container" *ngIf="officer">
+  <h3 class="m-3">
+    Officer
+  </h3>
+  <p>
+    <strong>Name:</strong>
+    {{ name }}
+  </p>
+  <p>
+    <strong>Birthday:</strong>
+    {{ birthday }}
+  </p>
+  <p>
+    <strong>Department:</strong>
+    {{ location }}
+  </p>
+</div>
+<div *ngIf="!officer && isLoaded">
+  Officer not found
+</div>

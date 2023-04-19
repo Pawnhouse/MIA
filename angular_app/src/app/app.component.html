@@ -1,0 +1,36 @@
+<div id="app">
+  <nav class="navbar navbar-expand navbar-dark bg-dark">
+    <a href="/" class="navbar-brand">MIA</a>
+    <ul class="navbar-nav mr-auto" routerLinkActive="active">
+
+      <li class="nav-item">
+        <a href="/officers" class="nav-link" *ngIf="isLoggedIn" routerLink="officers">Officers</a>
+      </li>
+      <li class="nav-item">
+        <a href="/complaints" class="nav-link" *ngIf="isLoggedIn" routerLink="complaints">Complaints</a>
+      </li>
+      <li class="nav-item">
+        <a href="/crimes" class="nav-link" *ngIf="isLoggedIn" routerLink="crimes">Crimes</a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
+      <li class="nav-item">
+        <a href="/login" class="nav-link" routerLink="login">Sign in</a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
+      <li class="nav-item">
+        <a href="/profile" class="nav-link" routerLink="profile">{{ name }}</a>
+      </li>
+      <li class="nav-item">
+        <a href class="nav-link" (click)="logout()">Log out</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</div>

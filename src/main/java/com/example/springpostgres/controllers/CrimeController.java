@@ -31,8 +31,7 @@ public class CrimeController {
     public ResponseEntity<?> create(@RequestBody Crime crime) {
         Type type = typeRepository.findById(crime.getType().getId()).orElseThrow();
         crime.setType(type);
-        crimeRepository.save(crime);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(crimeRepository.save(crime), HttpStatus.CREATED);
     }
 
 }

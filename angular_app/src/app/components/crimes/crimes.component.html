@@ -1,0 +1,10 @@
+<div class="container">
+  <h3 class="m-3">
+    Crimes
+  </h3>
+  <button class="ml-3 mt-3 btn btn-outline-primary" (click)="openForm()">Add crime</button>
+  <div *ngFor="let crime of crimes" class="p-3">
+    <p><b>Crime {{crime.id}}</b></p>
+    <p>{{crime.description}}</p>
+  </div>
+</div>

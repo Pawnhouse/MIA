@@ -34,13 +34,19 @@ function Profile() {
             ].join('-');
         }
 
-        setBirthday(dateToString(user.person.birthday))
-    }, []);
+        try {
+            setBirthday(dateToString(user.person.birthday));
+        } catch {
+        }
+    }, [user.person.birthday]);
 
     async function requestUpdate() {
         const newUser = {}
         newUser.email = email;
         newUser.role = role;
+        if (role === 'user') {
+            newUser.role = null;
+        }
 
         if (values[1] !== '') {
             newUser.password = password;
